@@ -184,6 +184,7 @@ func prepareCommand(ctx *ctx) (*exec.Cmd, error) {
 	} else {
 		c = exec.Command(shell, append([]string{"-c", cmd})...)
 	}
+
 	c.Env = []string{
 		"LANG=en_US.UTF-8",
 		getDefaultEnvPath(""),
@@ -193,6 +194,7 @@ func prepareCommand(ctx *ctx) (*exec.Cmd, error) {
 		"SSH_TELEPORT_USER=" + ctx.teleportUser,
 		fmt.Sprintf("SSH_SESSION_WEBPROXY_ADDR=%s:3080", proxyHost),
 	}
+	c.Env = append(c.Env, os.Environ()...)
 	c.Dir = osUser.HomeDir
 	c.SysProcAttr = &syscall.SysProcAttr{}
 	if _, found := ctx.env["TERM"]; !found {
